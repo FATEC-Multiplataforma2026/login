@@ -3,6 +3,7 @@ package br.com.fatec.fretec.security;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -23,6 +24,9 @@ public class JwtSecurity {
         SecretKey key = Keys.hmacShaKeyFor(getSecret());
         return Jwts.builder()
                 .subject(user.getUsername())
+                .claim("roles", user.getAuthorities().stream()
+                        .map(GrantedAuthority::getAuthority)
+                        .toList())
                 .issuedAt(date)
                 .expiration(new Date(date.getTime() + EXP))
                 .signWith(key, Jwts.SIG.HS256)

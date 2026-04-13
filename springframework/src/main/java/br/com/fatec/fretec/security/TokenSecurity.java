@@ -30,5 +30,4 @@ public class TokenSecurity {
         UserDetails userDetails = userDetailsService.loadUserByUsername(login.username());
         return new Token(jwtSecurity.generateToken(userDetails));
     }
-
 }
