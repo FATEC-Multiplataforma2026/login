@@ -1,7 +1,7 @@
 package br.com.fatec.fretec.controller;
 
-import br.com.fatec.fretec.controller.adapter.UserControllerAdapter;
-import br.com.fatec.fretec.controller.request.UserRequest;
+import br.com.fatec.fretec.controller.adapter.AuthControllerAdapter;
+import br.com.fatec.fretec.controller.request.LoginRequest;
 import br.com.fatec.fretec.controller.response.AuthResponse;
 import br.com.fatec.fretec.entity.Token;
 import br.com.fatec.fretec.security.TokenSecurity;
@@ -19,8 +19,8 @@ public class AuthController {
 
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/v1/auth")
-    public AuthResponse login(@RequestBody UserRequest request) {
-        Token token = tokenSecurity.gerarToken(UserControllerAdapter.cast(request));
+    public AuthResponse login(@RequestBody LoginRequest request) {
+        Token token = tokenSecurity.gerarToken(AuthControllerAdapter.cast(request));
         return new AuthResponse(token.value());
     }
 

@@ -1,7 +1,7 @@
 package br.com.fatec.fretec.security;
 
+import br.com.fatec.fretec.entity.Login;
 import br.com.fatec.fretec.entity.Token;
-import br.com.fatec.fretec.entity.User;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,11 +23,11 @@ public class TokenSecurity {
         this.authenticationManager = authenticationManager;
     }
 
-    public Token gerarToken(User user) {
+    public Token gerarToken(Login login) {
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                user.username(), user.password());
+                login.username(), login.password());
         authenticationManager.authenticate(authToken);
-        UserDetails userDetails = userDetailsService.loadUserByUsername(user.username());
+        UserDetails userDetails = userDetailsService.loadUserByUsername(login.username());
         return new Token(jwtSecurity.generateToken(userDetails));
     }
 
