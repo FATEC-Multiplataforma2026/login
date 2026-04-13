@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/fatec/v1")
+@RequestMapping("/fatec/login")
 public class UserController {
     private final UserRepository repository;
 
@@ -18,7 +18,7 @@ public class UserController {
     }
 
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/user/save")
+    @PostMapping("/v1/user/save")
     public UserResponse save(@RequestBody UserRequest request) {
         User save = repository.save(UserControllerAdapter.cast(request));
         return new UserResponse(

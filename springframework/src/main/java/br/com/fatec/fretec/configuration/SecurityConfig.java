@@ -45,9 +45,8 @@ public class SecurityConfig {
                         SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                "/fatec/v1/user/save/**",
-                                "/fatec/v1/auth/forget/**",
-                                "/fatec/v1/auth/login/**")
+                                "/fatec/login/v1/user/save/**",
+                                "/fatec/login/v1/auth/**")
                         .permitAll()
 //                        .requestMatchers("/fretec/v1/auth/save/**")
 //                        .hasRole("ADMIN")

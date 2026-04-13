@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/fatec/v1")
+@RequestMapping("/fatec/login")
 public class AuthController {
     private final TokenSecurity tokenSecurity;
 
@@ -18,14 +18,14 @@ public class AuthController {
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @PostMapping("/auth/login")
+    @PostMapping("/v1/auth")
     public AuthResponse login(@RequestBody UserRequest request) {
         Token token = tokenSecurity.gerarToken(UserControllerAdapter.cast(request));
         return new AuthResponse(token.value());
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/auth/forget/{username}")
+    @GetMapping("/v1/auth/forget/{username}")
     public String forgetPassword(@PathVariable("username") String username) {
         return "Olá " + username + " enviamos sua senha para o seu email";
     }
