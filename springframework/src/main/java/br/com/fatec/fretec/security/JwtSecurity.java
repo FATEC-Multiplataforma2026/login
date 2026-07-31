@@ -13,10 +13,14 @@ import java.util.Date;
 @Component
 public class JwtSecurity {
     private static final String SECRET = "u7x!A$9zLq#2vNf@eR6tYpWmZcXbGdQh";
-    private static final long EXP = 2L * 600 * 1000;
+    private static final long EXP = 2L * 60 * 1000;
 
     private byte[] getSecret() {
         return SECRET.getBytes();
+    }
+
+    public long getExpirationSeconds() {
+        return EXP / 1000;
     }
 
     public String generateToken(UserDetails user) {

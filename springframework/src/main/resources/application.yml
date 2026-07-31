@@ -1,10 +1,16 @@
 server:
-  port: 8081
+  port: 8082
 spring:
   application:
     name: login
   mongodb:
-    uri: mongodb://localhost:27017/fatec
+    uri: mongodb://localhost:27017/kleber
+#    uri: mongodb://fatec:12345@54.242.251.117:27017/kleber
   data:
     mongodb:
       auto-index-creation: true
+
+logging:
+  level:
+    org.springframework.web.cors: DEBUG
+    org.springframework.security: DEBUG

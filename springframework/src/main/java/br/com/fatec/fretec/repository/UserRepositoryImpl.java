@@ -25,6 +25,10 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public User save(User user) {
         try {
+            Optional<UserOrm> optional = repository.findByUsername(user.username());
+            if(optional.isPresent()) {
+                throw new RuntimeException("Usuario já existe");
+            }
             UserOrm orm = repository.save(UserRepositoryImplAdapter.cast(user));
             return UserRepositoryImplAdapter.cast(orm, encoder);
         } catch (Exception ex) {

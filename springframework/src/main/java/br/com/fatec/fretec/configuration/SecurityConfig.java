@@ -44,12 +44,12 @@ public class SecurityConfig {
                 .sessionManagement(sm -> sm.sessionCreationPolicy(
                         SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/fatec/login/v1/auth/forget/**")
+                        .hasAuthority("ROLE_ADMIN")
                         .requestMatchers(
                                 "/fatec/login/v1/user/save/**",
                                 "/fatec/login/v1/auth/**")
                         .permitAll()
-//                        .requestMatchers("/fretec/v1/auth/save/**")
-//                        .hasRole("ADMIN")
                         .anyRequest()
                         .authenticated())
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
