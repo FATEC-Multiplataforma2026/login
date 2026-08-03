@@ -35,26 +35,26 @@ public class AuthController {
         return new AuthResponse(token.value());
     }
 
-    @ResponseStatus(HttpStatus.OK)
-    @PostMapping("/v1/auth/cookie")
-    public AuthClaimsResponse loginCookie(@RequestBody LoginRequest request, HttpServletResponse response) {
-        AuthUserDetails userDetails = tokenSecurity.autenticar(AuthControllerAdapter.cast(request));
-        Token token = tokenSecurity.gerarToken(userDetails);
-        ResponseCookie cookie = ResponseCookie.from(ACCESS_TOKEN_COOKIE, token.value())
-                .httpOnly(true)
-                .secure(true)
-                .sameSite("Strict")
-                .path("/")
-                .maxAge(jwtSecurity.getExpirationSeconds())
-                .build();
-        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
-
-        User user = userDetails.user();
-        return new AuthClaimsResponse(
-                user.id(),
-                user.username(),
-                user.roles().stream().map(Enum::name).toList());
-    }
+//    @ResponseStatus(HttpStatus.OK)
+//    @PostMapping("/v1/auth/cookie")
+//    public AuthClaimsResponse loginCookie(@RequestBody LoginRequest request, HttpServletResponse response) {
+//        AuthUserDetails userDetails = tokenSecurity.autenticar(AuthControllerAdapter.cast(request));
+//        Token token = tokenSecurity.gerarToken(userDetails);
+//        ResponseCookie cookie = ResponseCookie.from(ACCESS_TOKEN_COOKIE, token.value())
+//                .httpOnly(true)
+//                .secure(true)
+//                .sameSite("Strict")
+//                .path("/")
+//                .maxAge(jwtSecurity.getExpirationSeconds())
+//                .build();
+//        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+//
+//        User user = userDetails.user();
+//        return new AuthClaimsResponse(
+//                user.id(),
+//                user.username(),
+//                user.roles().stream().map(Enum::name).toList());
+//    }
 
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/v1/auth/logout")

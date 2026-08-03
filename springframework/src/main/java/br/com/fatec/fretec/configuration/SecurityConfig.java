@@ -5,6 +5,7 @@ import br.com.fatec.fretec.security.JwtSecurity;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -14,6 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsUtils;
 
 @Configuration
 public class SecurityConfig {
@@ -40,21 +42,23 @@ public class SecurityConfig {
             HttpSecurity httpSecurity,
             UserDetailsService userDetails) throws Exception {
         JwtAuthFilterSecurity jwtFilter = new JwtAuthFilterSecurity(jwtSecurity, userDetails);
-        httpSecurity.csrf(AbstractHttpConfigurer::disable)
+        httpSecurity
+                .cors(Customizer.withDefaults())
+                .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(sm -> sm.sessionCreationPolicy(
                         SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                         .requestMatchers("/fatec/login/v1/auth/forget/**")
                         .hasAuthority("ROLE_ADMIN")
                         .requestMatchers(
                                 "/fatec/login/v1/user/save/**",
-                                "/fatec/login/v1/auth/**")
+                                "/fatec/login/v1/auth/**",
+                                "/fatec/login/v1/login")
                         .permitAll()
                         .anyRequest()
                         .authenticated())
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();
     }
-
-
 }
