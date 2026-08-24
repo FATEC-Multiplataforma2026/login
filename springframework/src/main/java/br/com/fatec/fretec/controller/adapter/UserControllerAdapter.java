@@ -2,7 +2,9 @@ package br.com.fatec.fretec.controller.adapter;
 
 import br.com.fatec.fretec.controller.request.UserRequest;
 import br.com.fatec.fretec.entity.User;
+import br.com.fatec.fretec.entity.enumerable.UserRole;
 
+import java.util.List;
 import java.util.UUID;
 
 public class UserControllerAdapter {
@@ -16,6 +18,6 @@ public class UserControllerAdapter {
                 request.password(),
                 request.email(),
                 request.cep(),
-                request.roles());
+                List.of(UserRole.USER));
     }
 }

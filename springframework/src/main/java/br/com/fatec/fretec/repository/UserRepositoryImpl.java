@@ -29,8 +29,8 @@ public class UserRepositoryImpl implements UserRepository {
             if(optional.isPresent()) {
                 throw new RuntimeException("Usuario já existe");
             }
-            UserOrm orm = repository.save(UserRepositoryImplAdapter.cast(user));
-            return UserRepositoryImplAdapter.cast(orm, encoder);
+            UserOrm orm = repository.save(UserRepositoryImplAdapter.cast(user, encoder));
+            return UserRepositoryImplAdapter.cast(orm);
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
@@ -43,7 +43,7 @@ public class UserRepositoryImpl implements UserRepository {
             if (optional.isEmpty()) {
                 throw new UsernameNotFoundException("Usuario não encontrado");
             }
-            return UserRepositoryImplAdapter.cast(optional.get(), encoder);
+            return UserRepositoryImplAdapter.cast(optional.get());
         } catch (UsernameNotFoundException ex) {
             throw ex;
         } catch (Exception ex) {

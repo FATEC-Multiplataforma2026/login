@@ -49,12 +49,11 @@ public class SecurityConfig {
                         SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-                        .requestMatchers("/fatec/login/v1/auth/forget/**")
+                        .requestMatchers("/fatec/login/v1/message/admin/**")
                         .hasAuthority("ROLE_ADMIN")
                         .requestMatchers(
-                                "/fatec/login/v1/user/save/**",
-                                "/fatec/login/v1/auth/**",
-                                "/fatec/login/v1/login")
+                                "/fatec/login/v1/create/**",
+                                "/fatec/login/v1/auth/**")
                         .permitAll()
                         .anyRequest()
                         .authenticated())
