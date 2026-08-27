@@ -64,7 +64,6 @@ public class AuthController {
         AuthUserDetails userDetails = tokenSecurity.autenticar(AuthControllerAdapter.cast(request));
         Token token = tokenSecurity.gerarToken(userDetails);
         User user = userDetails.user();
-
         ResponseCookie cookie = ResponseCookie.from(ACCESS_TOKEN_COOKIE, token.value())
                 .httpOnly(true)
                 .secure(true)

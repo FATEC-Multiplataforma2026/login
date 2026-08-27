@@ -4,10 +4,8 @@ spring:
   application:
     name: login
   mongodb:
+    auto-index-creation: true
     uri: mongodb+srv://teste:teste123@newcluster.xisxqqc.mongodb.net/Fatec
-  data:
-    mongodb:
-      auto-index-creation: true
 
 logging:
   level:

@@ -1,0 +1,18 @@
+FROM maven:3.9-amazoncorretto-17 AS build
+WORKDIR /build
+
+COPY pom.xml .
+COPY domain/pom.xml domain/pom.xml
+COPY springframework/pom.xml springframework/pom.xml
+
+COPY domain/src domain/src
+COPY springframework/src springframework/src
+
+RUN mvn clean package -DskipTests -pl springframework -am
+
+FROM amazoncorretto:17-alpine3.15
+LABEL MANTAINER="FATEC"
+WORKDIR /app
+EXPOSE 8082
+COPY --from=build /build/springframework/target/*.jar app.jar
+ENTRYPOINT ["java", "-jar", "app.jar"]

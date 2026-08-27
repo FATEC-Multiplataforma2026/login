@@ -28,10 +28,13 @@ public class TokenSecurity {
     }
 
     public AuthUserDetails autenticar(Login login) {
-        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                login.username(), login.password());
+        UsernamePasswordAuthenticationToken authToken =
+                new UsernamePasswordAuthenticationToken(
+                        login.username(),
+                        login.password());
         authenticationManager.authenticate(authToken);
-        return (AuthUserDetails) userDetailsService.loadUserByUsername(login.username());
+        return (AuthUserDetails) userDetailsService
+                .loadUserByUsername(login.username());
     }
 
     public Token gerarToken(AuthUserDetails userDetails) {
