@@ -1,0 +1,63 @@
+package br.gov.sp.cps.configuration;
+
+import br.gov.sp.cps.security.JwtAuthFilterSecurity;
+import br.gov.sp.cps.security.JwtSecurity;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsUtils;
+
+@Configuration
+public class SecurityConfig {
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(
+            HttpSecurity httpSecurity,
+            PasswordEncoder passwordEncoder,
+            UserDetailsService userDetailsService) throws Exception {
+        AuthenticationManagerBuilder builder = httpSecurity
+                .getSharedObject(AuthenticationManagerBuilder.class);
+        builder.userDetailsService(userDetailsService).
+                passwordEncoder(passwordEncoder);
+        return builder.build();
+    }
+
+    @Bean
+    public SecurityFilterChain filterChain(
+            JwtSecurity jwtSecurity,
+            HttpSecurity httpSecurity,
+            UserDetailsService userDetails) throws Exception {
+        JwtAuthFilterSecurity jwtFilter = new JwtAuthFilterSecurity(jwtSecurity, userDetails);
+        httpSecurity
+                .cors(Customizer.withDefaults())
+                .csrf(AbstractHttpConfigurer::disable)
+                .sessionManagement(sm -> sm.sessionCreationPolicy(
+                        SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
+                        .requestMatchers("/fatec/login/v1/message/admin/**")
+                        .hasAuthority("ROLE_ADMIN")
+                        .requestMatchers(
+                                "/fatec/login/v1/create/**",
+                                "/fatec/login/v1/auth/**")
+                        .permitAll()
+                        .anyRequest()
+                        .authenticated())
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+        return httpSecurity.build();
+    }
+}
