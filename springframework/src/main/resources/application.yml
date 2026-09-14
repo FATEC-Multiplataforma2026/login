@@ -7,6 +7,11 @@ spring:
     auto-index-creation: true
     uri: mongodb+srv://teste:teste123@newcluster.xisxqqc.mongodb.net/Fatec
 
+app:
+  cookie:
+    site: Lax
+    secure: false
+
 logging:
   level:
     org.springframework.web.cors: DEBUG

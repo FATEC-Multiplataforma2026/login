@@ -13,6 +13,7 @@ import br.gov.sp.cps.security.JwtSecurity;
 import br.gov.sp.cps.security.TokenSecurity;
 import br.gov.sp.cps.security.dto.AuthUserDetails;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
@@ -23,17 +24,33 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
     private static final String ACCESS_TOKEN_COOKIE = "access_token";
 
-    private final UserRepository repository;
+    private final String cookieSite;
+    private final Boolean cookieSecure;
     private final JwtSecurity jwtSecurity;
+    private final UserRepository repository;
     private final TokenSecurity tokenSecurity;
 
     public AuthController(
-            UserRepository repository,
             JwtSecurity jwtSecurity,
-            TokenSecurity tokenSecurity) {
+            UserRepository repository,
+            TokenSecurity tokenSecurity,
+            @Value("${app.cookie.site}") String cookieSite,
+            @Value("${app.cookie.secure}") Boolean cookieSecure) {
+        this.cookieSite = cookieSite;
         this.repository = repository;
         this.jwtSecurity = jwtSecurity;
+        this.cookieSecure = cookieSecure;
         this.tokenSecurity = tokenSecurity;
+    }
+
+    private ResponseCookie buildCookie(String value, long maxAgeSeconds) {
+        return ResponseCookie.from(ACCESS_TOKEN_COOKIE, value)
+                .httpOnly(true)
+                .secure(cookieSecure)
+                .sameSite(cookieSite)
+                .path("/")
+                .maxAge(maxAgeSeconds)
+                .build();
     }
 
     @ResponseStatus(HttpStatus.CREATED)
@@ -43,13 +60,7 @@ public class AuthController {
         AuthUserDetails userDetails = tokenSecurity.autenticar(new Login(user.username(), request.password()));
         Token token = tokenSecurity.gerarToken(userDetails);
 
-        ResponseCookie cookie = ResponseCookie.from(ACCESS_TOKEN_COOKIE, token.value())
-                .httpOnly(true)
-                .secure(true)
-                .sameSite("Strict")
-                .path("/")
-                .maxAge(jwtSecurity.getExpirationSeconds())
-                .build();
+        ResponseCookie cookie = buildCookie(token.value(), jwtSecurity.getExpirationSeconds());
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
 
         return new AuthClaimsResponse(
@@ -64,13 +75,8 @@ public class AuthController {
         AuthUserDetails userDetails = tokenSecurity.autenticar(AuthControllerAdapter.cast(request));
         Token token = tokenSecurity.gerarToken(userDetails);
         User user = userDetails.user();
-        ResponseCookie cookie = ResponseCookie.from(ACCESS_TOKEN_COOKIE, token.value())
-                .httpOnly(true)
-                .secure(true)
-                .sameSite("Strict")
-                .path("/")
-                .maxAge(jwtSecurity.getExpirationSeconds())
-                .build();
+
+        ResponseCookie cookie = buildCookie(token.value(), jwtSecurity.getExpirationSeconds());
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
 
         return new AuthClaimsResponse(
@@ -82,13 +88,7 @@ public class AuthController {
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/v1/logout")
     public void logout(HttpServletResponse response) {
-        ResponseCookie cookie = ResponseCookie.from(ACCESS_TOKEN_COOKIE, "")
-                .httpOnly(true)
-                .secure(true)
-                .sameSite("Strict")
-                .path("/")
-                .maxAge(0)
-                .build();
+        ResponseCookie cookie = buildCookie("", 0);
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
     }
 }
