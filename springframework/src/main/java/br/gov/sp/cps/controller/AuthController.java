@@ -2,9 +2,9 @@ package br.gov.sp.cps.controller;
 
 import br.gov.sp.cps.controller.adapter.AuthControllerAdapter;
 import br.gov.sp.cps.controller.adapter.UserControllerAdapter;
-import br.gov.sp.cps.controller.request.LoginRequest;
-import br.gov.sp.cps.controller.request.UserRequest;
-import br.gov.sp.cps.controller.response.AuthClaimsResponse;
+import br.gov.sp.cps.controller.dto.request.LoginRequest;
+import br.gov.sp.cps.controller.dto.request.UserRequest;
+import br.gov.sp.cps.controller.dto.response.AuthClaimsResponse;
 import br.gov.sp.cps.entity.Login;
 import br.gov.sp.cps.entity.Token;
 import br.gov.sp.cps.entity.User;

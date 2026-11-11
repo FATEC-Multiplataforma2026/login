@@ -1,6 +1,6 @@
 package br.gov.sp.cps.controller.adapter;
 
-import br.gov.sp.cps.controller.request.LoginRequest;
+import br.gov.sp.cps.controller.dto.request.LoginRequest;
 import br.gov.sp.cps.entity.Login;
 
 public class AuthControllerAdapter {

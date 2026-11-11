@@ -1,6 +1,6 @@
 package br.gov.sp.cps.controller.adapter;
 
-import br.gov.sp.cps.controller.request.UserRequest;
+import br.gov.sp.cps.controller.dto.request.UserRequest;
 import br.gov.sp.cps.entity.User;
 import br.gov.sp.cps.entity.enumerable.UserRole;
 

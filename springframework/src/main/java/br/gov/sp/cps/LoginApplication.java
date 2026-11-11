@@ -9,7 +9,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 @EnableMethodSecurity
 @SpringBootApplication
 public class LoginApplication {
-    public static void main(String[] args) {
+    static void main(String[] args) {
         SpringApplication.run(LoginApplication.class, args);
     }
 }

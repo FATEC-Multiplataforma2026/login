@@ -1,18 +1,24 @@
-FROM ghcr.io/graalvm/native-image-community:17 AS build
+FROM ghcr.io/graalvm/native-image-community:25i3-25.0.4.1-ol8-20260825 AS build
 WORKDIR /build
 
-RUN microdnf install -y maven
+ARG MAVEN_VERSION=3.9.16
+RUN microdnf install -y tar gzip && \
+    curl -fsSL "https://archive.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz" -o /tmp/maven.tar.gz && \
+    tar -xzf /tmp/maven.tar.gz -C /opt && \
+    ln -s "/opt/apache-maven-${MAVEN_VERSION}" /opt/maven && \
+    rm /tmp/maven.tar.gz
+ENV PATH="/opt/maven/bin:${PATH}"
 
 COPY pom.xml .
 COPY domain/pom.xml domain/pom.xml
+
 COPY springframework/pom.xml springframework/pom.xml
 COPY domain/src domain/src
+
 COPY springframework/src springframework/src
 
-# 1. builda e instala o domain no repositório local primeiro
 RUN mvn -pl domain -am clean install -DskipTests
 
-# 2. agora springframework encontra o domain normalmente
 RUN mvn -pl springframework -am -Pnative native:compile -DskipTests
 
 FROM debian:bookworm-slim

@@ -1,6 +1,6 @@
 package br.gov.sp.cps.controller;
 
-import br.gov.sp.cps.controller.response.MessageResponse;
+import br.gov.sp.cps.controller.dto.response.MessageResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

@@ -1,4 +1,4 @@
-package br.gov.sp.cps.controller.response;
+package br.gov.sp.cps.controller.dto.response;
 
 import br.gov.sp.cps.entity.enumerable.UserRole;
 
